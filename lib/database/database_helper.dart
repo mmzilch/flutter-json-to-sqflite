@@ -54,7 +54,10 @@ class DatabaseHelper {
   createFood(Foods food) async {
     await deleteAllFood();
     Database db = await this.database;
-    final res = await db.insert('$foodTable', food.toJson(),conflictAlgorithm: ConflictAlgorithm.replace);
+    final res = await db.insert(
+      '$foodTable', 
+    food.toJson(),
+    conflictAlgorithm: ConflictAlgorithm.replace);
     print("createfoodresult>>>"+res.toString());
     return res;
   }
@@ -70,7 +73,7 @@ class DatabaseHelper {
     final res = await db.rawQuery('SELECT * FROM food_table');
     print("res>>>"+res.length.toString());
     List<Foods> list = res.isNotEmpty ? res.map((e) => Foods.fromJson(e)).toList() : [];
-    print(list);
+    print("getallfoodlist>>>$list");
     return list;
   }
 

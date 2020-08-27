@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
+import 'package:flutter_healthy_fitness/database/api_provider.dart';
 import 'package:flutter_healthy_fitness/database/database_helper.dart';
-import 'package:flutter_healthy_fitness/model/foods_model.dart';
-import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -11,33 +8,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  FoodModel foodModel;
+  
   var _isLoading = false;
-  List<Foods> _foodList = new List<Foods>();
-  var id, name, calories, category, image;
-
-  @override
-  void initState() {
-    super.initState();
-    fetchData();
-  }
-
-  fetchData() async {
-    var url = "https://healthfitness.khaingthinkyi.me/api/food";
-    final response = await http.get(url);
-    print("responsebody>>>" + response.body.toString());
-    // var jsonData = json.decode(response.body);
-    // foodModel = FoodModel.fromJson(jsonData);
-    // print('response>>>'+foodModel.foods.length.toString());
-    // setState(() {});
-    print("statuscode>>>" + response.statusCode.toString());
-    if (response.statusCode == 200) {
-      List values = json.decode(response.body);
-      return values.map((e) => Foods.fromJson(e)).toList();
-    } else {
-      print("ERROR LOADING");
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +48,9 @@ class _HomeScreenState extends State<HomeScreen> {
       _isLoading = true;
     });
 
-    await fetchData();
+    var apiProvider = ApiProvider();
+    await apiProvider.getAllFoods();
+
     await Future.delayed(const Duration(seconds: 2));
     setState(() {
       _isLoading = false;
